@@ -1,0 +1,98 @@
+<ContentPage
+    x:Class="SfDatagrid.SFDosagePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:SfDatagrid.Converters"
+    xmlns:syncfusion="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
+    xmlns:viewModels="clr-namespace:SfDatagrid"
+    Title="Dosage Info">
+
+    <ContentPage.BindingContext>
+        <viewModels:SFDosagePageViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <converters:SuffixConverter x:Key="HoursConverter" Suffix="h" />
+        <converters:SuffixConverter x:Key="CelsiusConverter" Suffix="°C" />
+
+        <Style x:Key="DataGridHeaderStyle" TargetType="Label">
+            <Setter Property="LineBreakMode" Value="NoWrap" />
+            <Setter Property="HorizontalTextAlignment" Value="Center" />
+            <Setter Property="VerticalTextAlignment" Value="Center" />
+            <Setter Property="FontAttributes" Value="Bold" />
+        </Style>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <Grid Padding="10" RowSpacing="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <!--  Buttons + Dropdown  -->
+                <RowDefinition Height="*" />
+                <!--  DataGrid  -->
+            </Grid.RowDefinitions>
+
+            <!--  🧭 TOP LAYOUT AREA  -->
+            <VerticalStackLayout Grid.Row="0" Spacing="10">
+                <!--  🔽 Select Species Dropdown Button  -->
+                <Button
+                    BackgroundColor="LightBlue"
+                    Clicked="OnSelectSpeciesClicked"
+                    Text="Select Species" />
+
+                <!--  ➕ ➖ Button Row  -->
+                <HorizontalStackLayout Spacing="10">
+                    <Button
+                        BackgroundColor="LightGreen"
+                        Command="{Binding AddRowCommand}"
+                        Text="Add Row" />
+
+                    <Button
+                        BackgroundColor="LightCoral"
+                        Command="{Binding DeleteRowCommand}"
+                        Text="Delete Row" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+            <!--  📊 DATAGRID  -->
+            <syncfusion:SfDataGrid
+                x:Name="DataGrid"
+                Grid.Row="1"
+                AllowDeleting="True"
+                AllowEditing="True"
+                AllowResizingColumns="True"
+                ColumnWidthMode="Auto"
+                DefaultColumnWidth="120"
+                GridLinesVisibility="Both"
+                HeaderGridLinesVisibility="Both"
+                HeaderRowHeight="70"
+                HorizontalOptions="Center"
+                ItemsSource="{Binding Areas}"
+                NavigationMode="Cell"
+                SelectionChanged="Datagrid_SelectionChanged"
+                SelectionMode="Single"
+                VerticalOptions="Center">
+
+                <syncfusion:DataGridTextColumn HeaderText="Area Name" MappingName="AreaName" />
+
+                <syncfusion:DataGridNumericColumn
+                    DisplayBinding="{Binding Temperature, Converter={StaticResource CelsiusConverter}}"
+                    HeaderText="Temperature"
+                    MappingName="Temperature" />
+
+                <syncfusion:DataGridNumericColumn HeaderText="Estimated Half Loss" MappingName="EstimatedHalfLossTime" />
+
+                <syncfusion:DataGridNumericColumn
+                    DisplayBinding="{Binding ExposureTime, Converter={StaticResource HoursConverter}}"
+                    HeaderText="Exposure Time"
+                    MappingName="ExposureTime" />
+
+                <syncfusion:DataGridNumericColumn HeaderText="Area Volume" MappingName="AreaVolume" />
+                <syncfusion:DataGridNumericColumn HeaderText="User Defined CT" MappingName="UserDefinedCT" />
+                <syncfusion:DataGridTextColumn HeaderText="Target CT" MappingName="TargetCT" />
+                <syncfusion:DataGridCheckBoxColumn HeaderText="Fumigant Required" MappingName="FumigantRequired" />
+                <syncfusion:DataGridTextColumn HeaderText="Initial Concentration" MappingName="InitialConcentration" />
+            </syncfusion:SfDataGrid>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
