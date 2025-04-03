@@ -24,17 +24,11 @@
     </ContentPage.Resources>
 
     <ContentPage.Content>
-        <Grid Padding="10" RowSpacing="10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <!--  Buttons + Dropdown  -->
-                <RowDefinition Height="*" />
-                <!--  DataGrid  -->
-            </Grid.RowDefinitions>
+        <!--  👇 ScrollView makes the layout scroll when content grows  -->
+        <ScrollView>
+            <VerticalStackLayout Padding="10" Spacing="10">
 
-            <!--  🧭 TOP LAYOUT AREA  -->
-            <VerticalStackLayout Grid.Row="0" Spacing="10">
-                <!--  🔽 Select Species Dropdown Button  -->
+                <!--  🔽 Select Species Button  -->
                 <Button
                     BackgroundColor="LightBlue"
                     Clicked="OnSelectSpeciesClicked"
@@ -52,47 +46,115 @@
                         Command="{Binding DeleteRowCommand}"
                         Text="Delete Row" />
                 </HorizontalStackLayout>
+
+                <!--  📦 Wrapping SfDataGrid in its own Grid to fix sizing  -->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="200" />
+                    </Grid.RowDefinitions>
+
+                    <!--  🧾 Editable Data Grid  -->
+                    <syncfusion:SfDataGrid
+                        x:Name="DataGrid"
+                        Grid.Row="0"
+                        AllowDeleting="True"
+                        AllowEditing="True"
+                        AllowResizingColumns="True"
+                        ColumnWidthMode="Auto"
+                        DefaultColumnWidth="120"
+                        GridLinesVisibility="Both"
+                        HeaderGridLinesVisibility="Both"
+                        HeaderRowHeight="70"
+                        HorizontalOptions="Fill"
+                        ItemsSource="{Binding Areas}"
+                        NavigationMode="Cell"
+                        SelectionChanged="Datagrid_SelectionChanged"
+                        SelectionMode="Single"
+                        VerticalOptions="Fill">
+
+                        <syncfusion:DataGridTextColumn HeaderText="Area Name" MappingName="AreaName" />
+                        <syncfusion:DataGridNumericColumn
+                            DisplayBinding="{Binding Temperature, Converter={StaticResource CelsiusConverter}}"
+                            HeaderText="Temperature"
+                            MappingName="Temperature" />
+                        <syncfusion:DataGridNumericColumn HeaderText="Estimated Half Loss" MappingName="EstimatedHalfLossTime" />
+                        <syncfusion:DataGridNumericColumn
+                            DisplayBinding="{Binding ExposureTime, Converter={StaticResource HoursConverter}}"
+                            HeaderText="Exposure Time"
+                            MappingName="ExposureTime" />
+                        <syncfusion:DataGridNumericColumn HeaderText="Area Volume" MappingName="AreaVolume" />
+                        <syncfusion:DataGridNumericColumn HeaderText="User Defined CT" MappingName="UserDefinedCT" />
+                        <syncfusion:DataGridTextColumn HeaderText="Target CT" MappingName="TargetCT" />
+                        <syncfusion:DataGridCheckBoxColumn HeaderText="Fumigant Required" MappingName="FumigantRequired" />
+                        <syncfusion:DataGridTextColumn HeaderText="Initial Concentration" MappingName="InitialConcentration" />
+                    </syncfusion:SfDataGrid>
+                </Grid>
+
+                <!--  🎯 Calculate Button (now much closer to the grid!)  -->
+                <Button
+                    x:Name="CalculateButton"
+                    BackgroundColor="LightSkyBlue"
+                    Clicked="OnCalculateClicked"
+                    HorizontalOptions="Start"
+                    Text="Calculate"
+                    TextColor="Black" />
+                <!--  📊 Results Grid  -->
+                <Grid
+                    x:Name="ResultsGrid"
+                    Padding="0,20,0,0"
+                    ColumnSpacing="20"
+                    IsVisible="False">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <VerticalStackLayout Grid.Column="0">
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="14"
+                            Text="Total Amount of Fumigant" />
+                        <Label FontSize="16" Text="891.90 lb" />
+                        <Label FontSize="14" Text="7.14 Cylinders" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="1">
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="14"
+                            Text="Total Structure Volume" />
+                        <Label FontSize="16" Text="194,909 ft³" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="2">
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="14"
+                            Text="Average Concentration" />
+                        <Label FontSize="16" Text="71.36 oz/1000ft³" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="3">
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="14"
+                            Text="Average HLT" />
+                        <Label FontSize="16" Text="12.00 h" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="4">
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="14"
+                            Text="Average CT" />
+                        <Label FontSize="16" Text="926.50 oz·h/1000ft³" />
+                    </VerticalStackLayout>
+                </Grid>
             </VerticalStackLayout>
-
-            <!--  📊 DATAGRID  -->
-            <syncfusion:SfDataGrid
-                x:Name="DataGrid"
-                Grid.Row="1"
-                AllowDeleting="True"
-                AllowEditing="True"
-                AllowResizingColumns="True"
-                ColumnWidthMode="Auto"
-                DefaultColumnWidth="120"
-                GridLinesVisibility="Both"
-                HeaderGridLinesVisibility="Both"
-                HeaderRowHeight="70"
-                HorizontalOptions="Center"
-                ItemsSource="{Binding Areas}"
-                NavigationMode="Cell"
-                SelectionChanged="Datagrid_SelectionChanged"
-                SelectionMode="Single"
-                VerticalOptions="Center">
-
-                <syncfusion:DataGridTextColumn HeaderText="Area Name" MappingName="AreaName" />
-
-                <syncfusion:DataGridNumericColumn
-                    DisplayBinding="{Binding Temperature, Converter={StaticResource CelsiusConverter}}"
-                    HeaderText="Temperature"
-                    MappingName="Temperature" />
-
-                <syncfusion:DataGridNumericColumn HeaderText="Estimated Half Loss" MappingName="EstimatedHalfLossTime" />
-
-                <syncfusion:DataGridNumericColumn
-                    DisplayBinding="{Binding ExposureTime, Converter={StaticResource HoursConverter}}"
-                    HeaderText="Exposure Time"
-                    MappingName="ExposureTime" />
-
-                <syncfusion:DataGridNumericColumn HeaderText="Area Volume" MappingName="AreaVolume" />
-                <syncfusion:DataGridNumericColumn HeaderText="User Defined CT" MappingName="UserDefinedCT" />
-                <syncfusion:DataGridTextColumn HeaderText="Target CT" MappingName="TargetCT" />
-                <syncfusion:DataGridCheckBoxColumn HeaderText="Fumigant Required" MappingName="FumigantRequired" />
-                <syncfusion:DataGridTextColumn HeaderText="Initial Concentration" MappingName="InitialConcentration" />
-            </syncfusion:SfDataGrid>
-        </Grid>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

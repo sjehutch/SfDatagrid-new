@@ -32,6 +32,14 @@ public partial class SFDosagePage : ContentPage
             }
         }
     }
+    
+    private void OnCalculateClicked(object sender, EventArgs e)
+    {
+        // 👀 Make the results grid visible
+        ResultsGrid.IsVisible = true;
+
+        // 🧮 Optional: Here’s where you'd calculate real values and update the labels dynamically
+    }
 
     // 🔽 Handle dropdown button click — shows MultiSelectPopup
     private async void OnSelectSpeciesClicked(object sender, EventArgs e)
