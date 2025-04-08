@@ -11,96 +11,127 @@
         <viewModels:SFDosagePageViewModel />
     </ContentPage.BindingContext>
 
-    <ContentPage.Resources>
-        <converters:SuffixConverter x:Key="HoursConverter" Suffix="h" />
-        <converters:SuffixConverter x:Key="CelsiusConverter" Suffix="°C" />
-
-        <Style x:Key="DataGridHeaderStyle" TargetType="Label">
-            <Setter Property="LineBreakMode" Value="NoWrap" />
-            <Setter Property="HorizontalTextAlignment" Value="Center" />
-            <Setter Property="VerticalTextAlignment" Value="Center" />
-            <Setter Property="FontAttributes" Value="Bold" />
-        </Style>
-    </ContentPage.Resources>
+    <ContentPage.Resources />
 
     <ContentPage.Content>
-        <!--  👇 ScrollView makes the layout scroll when content grows  -->
         <ScrollView>
-            <VerticalStackLayout Padding="10" Spacing="10">
+            <Grid Padding="10" RowSpacing="10">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <!--  Select Species  -->
+                    <RowDefinition Height="Auto" />
+                    <!--  Add/Delete Buttons  -->
+                    <RowDefinition Height="Auto" />
+                    <!--  DataGrid  -->
+                    <RowDefinition Height="Auto" />
+                    <!--  Calculate Button  -->
+                    <RowDefinition Height="Auto" />
+                    <!--  Results Grid  -->
+                </Grid.RowDefinitions>
 
                 <!--  🔽 Select Species Button  -->
-                <Button
-                    BackgroundColor="LightBlue"
-                    Clicked="OnSelectSpeciesClicked"
-                    Text="Select Species" />
+                <Label
+                    Grid.Row="0"
+                    FontAttributes="Bold"
+                    FontSize="18"
+                    HorizontalOptions="Start"
+                    Text="Select Species"
+                    TextColor="Black"
+                    TextDecorations="Underline">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSelectSpeciesClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
 
-                <!--  ➕ ➖ Button Row  -->
-                <HorizontalStackLayout Spacing="10">
+
+                <!--  ➕ ➖ Buttons Row  -->
+                <Grid Grid.Row="1" ColumnSpacing="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
                     <Button
+                        Grid.Column="0"
                         BackgroundColor="LightGreen"
                         Command="{Binding AddRowCommand}"
                         Text="Add Row" />
 
                     <Button
+                        Grid.Column="1"
                         BackgroundColor="LightCoral"
                         Command="{Binding DeleteRowCommand}"
                         Text="Delete Row" />
-                </HorizontalStackLayout>
-
-                <!--  📦 Wrapping SfDataGrid in its own Grid to fix sizing  -->
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="200" />
-                    </Grid.RowDefinitions>
-
-                    <!--  🧾 Editable Data Grid  -->
-                    <syncfusion:SfDataGrid
-                        x:Name="DataGrid"
-                        Grid.Row="0"
-                        AllowDeleting="True"
-                        AllowEditing="True"
-                        AllowResizingColumns="True"
-                        ColumnWidthMode="Auto"
-                        DefaultColumnWidth="120"
-                        GridLinesVisibility="Both"
-                        HeaderGridLinesVisibility="Both"
-                        HeaderRowHeight="70"
-                        HorizontalOptions="Fill"
-                        ItemsSource="{Binding Areas}"
-                        NavigationMode="Cell"
-                        SelectionChanged="Datagrid_SelectionChanged"
-                        SelectionMode="Single"
-                        VerticalOptions="Fill">
-
-                        <syncfusion:DataGridTextColumn HeaderText="Area Name" MappingName="AreaName" />
-                        <syncfusion:DataGridNumericColumn
-                            DisplayBinding="{Binding Temperature, Converter={StaticResource CelsiusConverter}}"
-                            HeaderText="Temperature"
-                            MappingName="Temperature" />
-                        <syncfusion:DataGridNumericColumn HeaderText="Estimated Half Loss" MappingName="EstimatedHalfLossTime" />
-                        <syncfusion:DataGridNumericColumn
-                            DisplayBinding="{Binding ExposureTime, Converter={StaticResource HoursConverter}}"
-                            HeaderText="Exposure Time"
-                            MappingName="ExposureTime" />
-                        <syncfusion:DataGridNumericColumn HeaderText="Area Volume" MappingName="AreaVolume" />
-                        <syncfusion:DataGridNumericColumn HeaderText="User Defined CT" MappingName="UserDefinedCT" />
-                        <syncfusion:DataGridTextColumn HeaderText="Target CT" MappingName="TargetCT" />
-                        <syncfusion:DataGridCheckBoxColumn HeaderText="Fumigant Required" MappingName="FumigantRequired" />
-                        <syncfusion:DataGridTextColumn HeaderText="Initial Concentration" MappingName="InitialConcentration" />
-                    </syncfusion:SfDataGrid>
                 </Grid>
 
-                <!--  🎯 Calculate Button (now much closer to the grid!)  -->
+                <!--  🧾 Data Grid in horizontal scrollable view  -->
+                <ScrollView Grid.Row="2" Orientation="Horizontal">
+                    <Grid WidthRequest="1600">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="300" />
+                        </Grid.RowDefinitions>
+
+                        <syncfusion:SfDataGrid
+                            x:Name="DataGrid"
+                            Grid.Row="0"
+                            AllowDeleting="True"
+                            AllowEditing="True"
+                            AllowResizingColumns="True"
+                            ColumnWidthMode="FitByHeader"
+                            GridLinesVisibility="Both"
+                            HeaderGridLinesVisibility="Both"
+                            ItemsSource="{Binding Areas}"
+                            NavigationMode="Cell"
+                            SelectionChanged="Datagrid_SelectionChanged"
+                            SelectionMode="Single">
+
+                            <syncfusion:DataGridTextColumn
+                                CellTextAlignment="Start"
+                                ColumnWidthMode="FitByCell"
+                                HeaderText="Area Name"
+                                MappingName="AreaName" />
+                            <syncfusion:DataGridTextColumn
+                                CellTextAlignment="Start"
+                                HeaderText="Temperature"
+                                HeaderTextAlignment="Start"
+                                MappingName="Temperature" />
+                            <syncfusion:DataGridNumericColumn
+                                HeaderText="Estimated Half Loss"
+                                HeaderTextAlignment="Start"
+                                MappingName="EstimatedHalfLossTime" />
+                            <syncfusion:DataGridNumericColumn
+                                HeaderText="Exposure Time"
+                                HeaderTextAlignment="Start"
+                                MappingName="ExposureTime" />
+                            <syncfusion:DataGridNumericColumn
+                                CellTextAlignment="Start"
+                                ColumnWidthMode="FitByCell"
+                                HeaderText="Area Volume"
+                                HeaderTextAlignment="Start"
+                                MappingName="AreaVolume" />
+                            <syncfusion:DataGridNumericColumn HeaderText="User Defined CT" MappingName="UserDefinedCT" />
+                            <syncfusion:DataGridTextColumn HeaderText="Target CT" MappingName="TargetCT" />
+                            <syncfusion:DataGridNumericColumn HeaderText="Fumigant Required" MappingName="FumigantRequired" />
+                            <syncfusion:DataGridTextColumn HeaderText="Initial Concentration" MappingName="InitialConcentration" />
+                        </syncfusion:SfDataGrid>
+                    </Grid>
+                </ScrollView>
+
+                <!--  🎯 Calculate Button  -->
                 <Button
                     x:Name="CalculateButton"
+                    Grid.Row="3"
                     BackgroundColor="LightSkyBlue"
                     Clicked="OnCalculateClicked"
                     HorizontalOptions="Start"
                     Text="Calculate"
                     TextColor="Black" />
+
                 <!--  📊 Results Grid  -->
                 <Grid
                     x:Name="ResultsGrid"
+                    Grid.Row="4"
                     Padding="0,20,0,0"
                     ColumnSpacing="20"
                     IsVisible="False">
@@ -113,48 +144,60 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <VerticalStackLayout Grid.Column="0">
+                    <Grid Grid.Column="0" RowSpacing="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
                         <Label
+                            Grid.Row="0"
                             FontAttributes="Bold"
                             FontSize="14"
                             Text="Total Amount of Fumigant" />
-                        <Label FontSize="16" Text="891.90 lb" />
-                        <Label FontSize="14" Text="7.14 Cylinders" />
-                    </VerticalStackLayout>
+                        <Label
+                            Grid.Row="1"
+                            FontSize="16"
+                            Text="891.90 lb" />
+                        <Label
+                            Grid.Row="2"
+                            FontSize="14"
+                            Text="7.14 Cylinders" />
+                    </Grid>
 
-                    <VerticalStackLayout Grid.Column="1">
+                    <Grid Grid.Column="1">
                         <Label
                             FontAttributes="Bold"
                             FontSize="14"
                             Text="Total Structure Volume" />
                         <Label FontSize="16" Text="194,909 ft³" />
-                    </VerticalStackLayout>
+                    </Grid>
 
-                    <VerticalStackLayout Grid.Column="2">
+                    <Grid Grid.Column="2">
                         <Label
                             FontAttributes="Bold"
                             FontSize="14"
                             Text="Average Concentration" />
                         <Label FontSize="16" Text="71.36 oz/1000ft³" />
-                    </VerticalStackLayout>
+                    </Grid>
 
-                    <VerticalStackLayout Grid.Column="3">
+                    <Grid Grid.Column="3">
                         <Label
                             FontAttributes="Bold"
                             FontSize="14"
                             Text="Average HLT" />
                         <Label FontSize="16" Text="12.00 h" />
-                    </VerticalStackLayout>
+                    </Grid>
 
-                    <VerticalStackLayout Grid.Column="4">
+                    <Grid Grid.Column="4">
                         <Label
                             FontAttributes="Bold"
                             FontSize="14"
                             Text="Average CT" />
                         <Label FontSize="16" Text="926.50 oz·h/1000ft³" />
-                    </VerticalStackLayout>
+                    </Grid>
                 </Grid>
-            </VerticalStackLayout>
+            </Grid>
         </ScrollView>
     </ContentPage.Content>
 </ContentPage>

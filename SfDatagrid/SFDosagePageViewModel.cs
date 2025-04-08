@@ -11,19 +11,21 @@ public class Area
     public double AreaVolume { get; set; }
     public double EstimatedHalfLossTime { get; set; }
     public double ExposureTime { get; set; }
-    public bool FumigantRequired { get; set; }
-    public double Temperature { get; set; }
+    public double FumigantRequired { get; set; }
+    public string Temperature { get; set; }
     public double UserDefinedCT { get; set; }
     public double TargetCT { get; set; }
     public double InitialConcentration { get; set; }
 
-   
+    
 }
 
 
 // ViewModel now uses ObservableObject to support binding
 public partial class SFDosagePageViewModel : ObservableObject
 {
+    private int _areaCounter = 1;
+    
     // Collection of Area rows
     [ObservableProperty]
     private ObservableCollection<Area> areas = new();
@@ -40,13 +42,13 @@ public partial class SFDosagePageViewModel : ObservableObject
             new Area
             {
                 AreaName = "Test",
-                AreaVolume = 283.16846,
+                Temperature = "77 'F",
                 EstimatedHalfLossTime = 12.0,
                 ExposureTime = 24.0,
-                FumigantRequired = true,
-                Temperature = 32.22,
+                AreaVolume = 283.16846,
                 UserDefinedCT = 0.0,
                 TargetCT = 286.0367,
+                FumigantRequired = 135.07,
                 InitialConcentration = 22.0295
             }
         };
@@ -58,15 +60,15 @@ public partial class SFDosagePageViewModel : ObservableObject
     {
         var area = new Area
         {
-            AreaName = "New Area",
-            AreaVolume = 100,
-            EstimatedHalfLossTime = 10,
-            ExposureTime = 5,
-            FumigantRequired = false,
-            Temperature = 25,
-            UserDefinedCT = 1,
-            TargetCT = 200,
-            InitialConcentration = 20
+            AreaName = $"New Area {_areaCounter++}",
+            Temperature = "77 'F",
+            EstimatedHalfLossTime = 12.0,
+            ExposureTime = 24.0,
+            AreaVolume = 283.16846,
+            UserDefinedCT = 0.0,
+            TargetCT = 286.0367,
+            FumigantRequired = 135.07,
+            InitialConcentration = 22.0295
         };
 
         if (int.TryParse(IndexText, out int index) && index >= 0 && index <= Areas.Count)
