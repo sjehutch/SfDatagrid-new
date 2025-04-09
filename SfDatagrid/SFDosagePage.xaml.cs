@@ -15,6 +15,16 @@ public partial class SFDosagePage : ContentPage
     public SFDosagePage()
     {
         InitializeComponent();
+       
+    }
+    
+    private void DataGrid_QueryRowHeight(object sender, DataGridQueryRowHeightEventArgs e)
+    {
+        if (e.RowIndex == 0)
+        {
+            e.Height = e.GetIntrinsicRowHeight(e.RowIndex);
+            e.Handled = true;
+        }
     }
 
     // 🚀 Handles row selection in the grid and updates the index in the ViewModel

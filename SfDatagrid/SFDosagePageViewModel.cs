@@ -8,14 +8,20 @@ namespace SfDatagrid;
 public class Area
 {
     public string AreaName { get; set; }
-    public double AreaVolume { get; set; }
-    public double EstimatedHalfLossTime { get; set; }
-    public double ExposureTime { get; set; }
-    public double FumigantRequired { get; set; }
+    
     public string Temperature { get; set; }
-    public double UserDefinedCT { get; set; }
-    public double TargetCT { get; set; }
-    public double InitialConcentration { get; set; }
+    
+    public string EstimatedHalfLossTime { get; set; }
+    
+    public string ExposureTime { get; set; }
+    public string AreaVolume { get; set; }
+   
+    public string UserDefinedCT { get; set; }
+    
+ public string TargetCT { get; set; }
+    
+    public string FumigantRequired { get; set; }
+    public string InitialConcentration { get; set; }
 
     
 }
@@ -43,13 +49,13 @@ public partial class SFDosagePageViewModel : ObservableObject
             {
                 AreaName = "Test",
                 Temperature = "77 'F",
-                EstimatedHalfLossTime = 12.0,
-                ExposureTime = 24.0,
-                AreaVolume = 283.16846,
-                UserDefinedCT = 0.0,
-                TargetCT = 286.0367,
-                FumigantRequired = 135.07,
-                InitialConcentration = 22.0295
+                EstimatedHalfLossTime = "12.00 h",
+                ExposureTime = "24.00 h",
+                AreaVolume = "283.293 ft",
+                UserDefinedCT = "0.00",
+                TargetCT = "1,210.10 oz",
+                FumigantRequired = "135.07 lb",
+                InitialConcentration = "92.99 oz/ft",
             }
         };
     }
@@ -60,15 +66,15 @@ public partial class SFDosagePageViewModel : ObservableObject
     {
         var area = new Area
         {
-            AreaName = $"New Area {_areaCounter++}",
-            Temperature = "77 'F",
-            EstimatedHalfLossTime = 12.0,
-            ExposureTime = 24.0,
-            AreaVolume = 283.16846,
-            UserDefinedCT = 0.0,
-            TargetCT = 286.0367,
-            FumigantRequired = 135.07,
-            InitialConcentration = 22.0295
+            AreaName = "Test",
+            Temperature = "70 'F",
+            EstimatedHalfLossTime = "12.00 h",
+            ExposureTime = "24.00 h",
+            AreaVolume = "100 ft",
+            UserDefinedCT = "0.00",
+            TargetCT = "0.00 oz",
+            FumigantRequired = "135 lb",
+            InitialConcentration = "50.00 oz/ft",
         };
 
         if (int.TryParse(IndexText, out int index) && index >= 0 && index <= Areas.Count)
